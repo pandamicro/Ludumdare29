@@ -20,4 +20,11 @@
   <object x="1205" y="514" width="104" height="128"/>
   <object x="426" y="609" width="62" height="33"/>
  </objectgroup>
+ <objectgroup name="objs" width="65" height="30">
+  <object type="LabelTTF" x="171" y="713" width="360" height="141">
+   <properties>
+    <property name="string" value="It's meaningles, nobody around, how can I get out ?"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

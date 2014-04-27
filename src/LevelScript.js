@@ -3,14 +3,17 @@
  */
 
 var LevelScript = [
-    null,
-    null,
-    null,
+    //null,
+    //null,
+    //null,
     function (level) {
         var trigger = cachedObjs.level4_trigger, bridge = cachedObjs.level4_bridge, goron = cachedObjs.level4_goron;
         if(trigger) {
+            bridge.ox = bridge.x;
+            bridge.oy = bridge.y;
+            bridge.action = cc.Sequence.create(cc.DelayTime.create(2), cc.MoveTo.create(3, bridge.x + bridge.width, bridge.y));
             trigger.setTriggerFunc(function() {
-                bridge.runAction(cc.Sequence.create(cc.DelayTime.create(2), cc.MoveTo.create(3, bridge.x + bridge.width, bridge.y)));
+                bridge.runAction(bridge.action);
             });
 
             var label = new cc.LabelTTF("AAA", "Symbol", 36);
@@ -18,9 +21,15 @@ var LevelScript = [
             label.y = 256;
             label.x = 1000;
             label.visible = false;
+            label.action = cc.Spawn.create(
+                cc.MoveTo.create(1, 1000, 50),
+                cc.ScaleTo.create(1, 0.3, 0.3)
+            );
             goron.parent.addChild(label);
+            goron.ox = goron.x;
+            goron.oy = goron.y;
             var cryCount = 0, dead = false;
-            goron.update = function () {
+            var update = function () {
                 if(dead) {
                     if (cryCount === 0) {
                         label.visible = true;
@@ -31,13 +40,7 @@ var LevelScript = [
                             label.string += "H";
                     }
                     else {
-                        label.runAction(
-                            cc.Spawn.create(
-                                cc.MoveTo.create(1, 1000, 50),
-                                cc.ScaleTo.create(1, 0.3, 0.3)
-                            )
-                        );
-
+                        label.runAction(label.action);
                         goron.update = null;
                     }
 
@@ -52,11 +55,28 @@ var LevelScript = [
                 if (y + h < 200) {
                     dead = true;
                 }
-            }
+            };
+            goron.update = update;
+
+            label.reinit = function () {
+                dead = false;
+                cryCount = 0;
+                this.stopAction(this.action);
+                this.y = 256;
+                this.x = 1000;
+                this.string = "AAA";
+                this.visible = false;
+                this.scale = 1;
+
+                goron.update = update;
+                bridge.stopAction(bridge.action);
+            };
         }
     },
     null,
     null,
     null,
-    null
+    function (level) {
+        level.lock = true;
+    }
 ];

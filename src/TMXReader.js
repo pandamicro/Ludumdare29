@@ -46,8 +46,15 @@ var TMXReader = cc.Class.extend({
                 }
                 else {
                     var type = window[obj.type];
-                    if(typeof type == "function") {
+                    if (typeof type == "function") {
                         node = new type(obj);
+                    }
+                    else if (obj.type == "LabelTTF" && obj.string) {
+                        node = new cc.LabelTTF(obj.string, "Symbol", 18, cc.size(obj.width, obj.height), cc.TEXT_ALIGNMENT_LEFT);
+                        node.x = obj.x;
+                        node.y = obj.y;
+                        node.color = cc.color(173, 184, 178, 255);
+                        node.anchorX = node.anchorY = 0;
                     }
                     else node = new PhysicWall(obj);
                 }

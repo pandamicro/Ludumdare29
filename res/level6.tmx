@@ -19,6 +19,11 @@
   <object type="DropStab" x="885" y="110" width="226" height="366"/>
   <object type="DropStab" x="1164" y="105" width="120" height="370"/>
   <object type="DropStab" x="1334" y="106" width="515" height="369"/>
+  <object type="LabelTTF" x="106" y="693" width="321" height="153">
+   <properties>
+    <property name="string" value="I didn't mean to kill them , what the hell is happenning here ?"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Goron" width="60" height="30">
   <properties>

@@ -13,5 +13,10 @@
  </objectgroup>
  <objectgroup name="objs" width="60" height="30">
   <object type="Treasure" x="499" y="591" width="13" height="16"/>
+  <object type="LabelTTF" x="309" y="723" width="390" height="93">
+   <properties>
+    <property name="string" value="Sometimes the appearance lies, I should keep looking for the truth beneath the surface ...   I'm sorry ..."/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

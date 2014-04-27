@@ -14,6 +14,7 @@ var Level = cc.ParallaxNode.extend({
     right : 0,
 
     end : false,
+    lock : false,
 
     ctor : function(scene, tmxFile) {
         this._super();
@@ -147,7 +148,7 @@ var Level = cc.ParallaxNode.extend({
         }
 
         // Win check
-        if (hx > this.right) {
+        if (!this.lock && hx > this.right) {
             this.scene.nextLevel();
         }
     },

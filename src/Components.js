@@ -311,6 +311,10 @@ var Stab = cc.Layer.extend({
                     goron.blood.update();
                 };
                 goron.reinit = function () {
+                    this.x = this.ox;
+                    this.y = this.oy;
+                    this.phyObj.body.setPos(cp.v(this.x, this.y));
+                    this.phyObj.body.a = 0;
                     goron.removeChild(goron.blood);
                     goron.blood = null;
                 };
@@ -395,6 +399,10 @@ var DropStab = cc.Layer.extend({
                     goron.blood && goron.blood.update();
                 };
                 goron.reinit = function () {
+                    this.x = this.ox;
+                    this.y = this.oy;
+                    this.phyObj.body.setPos(cp.v(this.x, this.y));
+                    this.phyObj.body.a = 0;
                     goron.blood && goron.removeChild(goron.blood);
                     goron.blood = null;
                 };
@@ -515,12 +523,15 @@ var LittleGoron = cc.Sprite.extend({
         this.runAction(this.jumpAction);
 
         Physics.world.addCollisionHandler( LittleGoron.COL_TYPE, Hero.COL_TYPE, function (a) {
-            var hero = a.getB().obj.view.parent;
             var goron = a.getA().obj.view;
+            if(goron.follow) return false;
+            var hero = a.getB().obj.view.parent;
             goron.stopAction(goron.jumpAction);
             goron.setPosition(hero.x, hero.y + hero.height/2 + goron.height/2);
             goron.scale = 1;
             goron.follow = hero;
+
+            cc.director.getRunningScene().level.lock = false;
         }, null, null, null);
     },
 

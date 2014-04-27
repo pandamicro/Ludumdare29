@@ -3,7 +3,7 @@
  */
 
 var upgraded = false;
-var UPGRADE_RATIO = 5;
+var UPGRADE_RATIO = 3;
 
 var Hero = cc.Sprite.extend({
     fillColor : cc.color(255, 255, 255, 255),
@@ -59,8 +59,8 @@ var Hero = cc.Sprite.extend({
 
     upgrade : function() {
         upgraded = true;
-        this.parent.jumpVel *= UPGRADE_RATIO;
-        this.maxSpeed *= UPGRADE_RATIO;
+        this.parent.jumpVel = 1800*UPGRADE_RATIO;
+        this.maxSpeed = 200*UPGRADE_RATIO;
     },
 
     cleanup : function () {

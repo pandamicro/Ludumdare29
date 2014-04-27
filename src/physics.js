@@ -65,9 +65,9 @@ var StaticObject = cc.Class.extend({
     },
 
     removeSelf: function () {
-        Physics.world.removeStaticShape(this.top);
-        Physics.world.removeStaticShape(this.left);
-        Physics.world.removeStaticShape(this.right);
+        Physics.world.removeShape(this.top);
+        Physics.world.removeShape(this.left);
+        Physics.world.removeShape(this.right);
     }
 });
 var StaticSensor = cc.Class.extend({

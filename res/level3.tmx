@@ -15,6 +15,11 @@
  </objectgroup>
  <objectgroup name="objs" width="60" height="30">
   <object type="Pool" x="901" y="651" width="295" height="326"/>
+  <object type="LabelTTF" x="658" y="648" width="233" height="130">
+   <properties>
+    <property name="string" value="Oh no ! I can't swim ..."/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Goron" width="60" height="30">
   <properties>

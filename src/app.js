@@ -17,6 +17,7 @@ var MainScene = cc.Scene.extend({
     ],
 
     currentLevel : 0,
+    restart : null,
 
     ctor : function () {
         this._super();
@@ -27,12 +28,47 @@ var MainScene = cc.Scene.extend({
         if (LevelScript[this.currentLevel]) {
             LevelScript[this.currentLevel](this.level);
         }
+
+        this.restart = new cc.Sprite(res.restart);
+        this.restart.x = cc.winSize.width - 48;
+        this.restart.y = cc.winSize.height - 48;
+        this.restart.scale = 0.8;
+
+        var rect = cc.rect(this.restart.x, this.restart.y, this.restart.width, this.restart.height);
+        rect.x -= rect.width/2;
+        rect.y -= rect.height/2;
+
+        cc.eventManager.addListener({
+            event: cc.EventListener.TOUCH_ONE_BY_ONE,
+
+            onTouchBegan : function(touch, event) {
+                var restart = event.getCurrentTarget().restart;
+
+                if (cc.rectContainsPoint(rect, touch.getLocation())) {
+                    return true;
+                }
+            },
+
+            onTouchEnded : function(touch, event) {
+                var scene = event.getCurrentTarget(), restart = scene.restart;
+
+                if (cc.rectContainsPoint(rect, touch.getLocation())) {
+                    scene.restartLevel();
+                    return true;
+                }
+            }
+        }, this);
     },
 
     onEnter : function () {
         this._super();
 
         this.addChild(this.level);
+        this.addChild(this.restart);
+    },
+
+    restartLevel : function () {
+        this.level.reinit();
     },
 
     nextLevel : function () {
