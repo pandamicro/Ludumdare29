@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="60" height="30" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="background" value="background1"/>
+  <property name="heroX" value="3"/>
+  <property name="heroY" value="20"/>
+  <property name="left" value="1"/>
+  <property name="right" value="27"/>
+ </properties>
+ <objectgroup name="Wall" width="60" height="30">
+  <object x="-14" y="691" width="934" height="315"/>
+  <object x="424" y="659" width="159" height="42"/>
+ </objectgroup>
+ <objectgroup name="objs" width="60" height="30">
+  <object type="Treasure" x="499" y="591" width="13" height="16"/>
+ </objectgroup>
+</map>

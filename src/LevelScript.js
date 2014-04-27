@@ -4,6 +4,8 @@
 
 var LevelScript = [
     null,
+    null,
+    null,
     function (level) {
         var trigger = cachedObjs.level4_trigger, bridge = cachedObjs.level4_bridge, goron = cachedObjs.level4_goron;
         if(trigger) {
@@ -53,6 +55,7 @@ var LevelScript = [
             }
         }
     },
+    null,
     null,
     null,
     null

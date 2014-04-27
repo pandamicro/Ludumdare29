@@ -2,6 +2,9 @@
  * Created by Huabin LING on 4/26/14.
  */
 
+var upgraded = false;
+var UPGRADE_RATIO = 5;
+
 var Hero = cc.Sprite.extend({
     fillColor : cc.color(255, 255, 255, 255),
     lineWidth : 2,
@@ -21,6 +24,8 @@ var Hero = cc.Sprite.extend({
 
         this.width = w;
         this.height = h;
+
+        if (upgraded) this.maxSpeed = 200*UPGRADE_RATIO;
 
         this.initPhysics(x, y, w, h);
     },
@@ -50,6 +55,12 @@ var Hero = cc.Sprite.extend({
         this.rightSensor.setSensor(true);
         this.rightSensor.setCollisionType(Hero.RIGHT_COL_TYPE);
         Physics.world.addShape(this.rightSensor);
+    },
+
+    upgrade : function() {
+        upgraded = true;
+        this.parent.jumpVel *= UPGRADE_RATIO;
+        this.maxSpeed *= UPGRADE_RATIO;
     },
 
     cleanup : function () {
@@ -89,6 +100,9 @@ var HeroLayer = cc.Layer.extend({
 
     ctor : function(level) {
         this._super();
+
+        if (upgraded)
+            this.jumpVel = 1800 * UPGRADE_RATIO;
 
         this.level = level;
         this.width = this.w;
@@ -174,7 +188,7 @@ var HeroLayer = cc.Layer.extend({
         this.phyObj.body.vx = velx;
     },
 
-    dead : function () {
+    dead : function() {
         this.level.restart();
     }
 });

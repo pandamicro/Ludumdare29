@@ -2,7 +2,7 @@
 <map version="1.0" orientation="orthogonal" width="60" height="30" tilewidth="32" tileheight="32">
  <properties>
   <property name="background" value="background1"/>
-  <property name="heroX" value="11"/>
+  <property name="heroX" value="3"/>
   <property name="heroY" value="19"/>
   <property name="left" value="0"/>
   <property name="right" value="58"/>
@@ -17,14 +17,15 @@
   <object type="DropStab" x="505" y="168" width="101" height="308"/>
   <object type="DropStab" x="684" y="109" width="115" height="368"/>
   <object type="DropStab" x="885" y="110" width="226" height="366"/>
-  <object type="DropStab" x="1200" y="107" width="120" height="370"/>
-  <object type="DropStab" x="1386" y="106" width="431" height="370"/>
+  <object type="DropStab" x="1164" y="105" width="120" height="370"/>
+  <object type="DropStab" x="1334" y="106" width="515" height="369"/>
  </objectgroup>
  <objectgroup name="Goron" width="60" height="30">
   <properties>
    <property name="className" value="GoronLayer"/>
   </properties>
-  <object x="129" y="561" width="73" height="75"/>
-  <object x="211" y="596" width="27" height="39"/>
+  <object x="234" y="560" width="73" height="75"/>
+  <object x="311" y="596" width="27" height="39"/>
+  <object x="202" y="594" width="27" height="39"/>
  </objectgroup>
 </map>

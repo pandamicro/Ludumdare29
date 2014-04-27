@@ -365,13 +365,12 @@ var DropStab = cc.Layer.extend({
         this.phyObj.shape.setCollisionType(DropStab.COL_TYPE);
 
         this.downAction = cc.Sequence.create(
-            cc.DelayTime.create(Math.ceil(10*Math.random())/10),
+            cc.DelayTime.create(Math.ceil(4*Math.random())/10),
             cc.EaseSineIn.create(cc.MoveTo.create(2, this.x, this.destY)),
             cc.CallFunc.create(this.goUp, this)
         );
         this.upAction = cc.Sequence.create(
             cc.EaseSineOut.create(cc.MoveTo.create(2, this.x, this.objDesc.y)),
-            cc.DelayTime.create(Math.ceil(5*Math.random())/10),
             cc.CallFunc.create(this.goDown, this)
         );
 
@@ -421,3 +420,120 @@ var DropStab = cc.Layer.extend({
 });
 
 DropStab.COL_TYPE = 54;
+
+
+var Treasure = cc.Sprite.extend({
+
+    w : 72,
+    h : 72,
+    sensorOff : 30,
+    sensorSize : 12,
+
+    phyObj : null,
+
+    ctor : function (objDesc) {
+        var rect = cc.rect(0, 0, this.w, this.h);
+        var fr1 = new cc.SpriteFrame(res.treasure1, rect), fr2 = new cc.SpriteFrame(res.treasure2, rect);
+
+        this._super(fr1);
+
+        var action = cc.RepeatForever.create(cc.Animate.create(cc.Animation.create([fr1, fr2], 0.4)));
+        this.runAction(action);
+
+        this.x = objDesc.x;
+        this.y = objDesc.y;
+        this.width = this.w;
+        this.height = this.h;
+
+        this.phyObj = new StaticSensor(objDesc.x-this.w/2+this.sensorOff, objDesc.y-this.h/2+this.sensorOff/2, this.sensorSize, this.sensorSize, this);
+        this.phyObj.shape.setCollisionType(Treasure.COL_TYPE);
+
+        Physics.world.addCollisionHandler( Treasure.COL_TYPE, Hero.COL_TYPE, function (a) {
+            var hero = a.getB().obj.view;
+            hero.upgrade();
+            var treasure = a.getA().obj.view;
+            treasure.scheduleOnce(treasure.remove, 0.1);
+        }, null, null, null);
+    },
+
+    remove : function () {
+        this.phyObj.removeSelf();
+        this.removeFromParent();
+    }
+});
+
+Treasure.COL_TYPE = 55;
+
+
+var LittleGoron = cc.Sprite.extend({
+    phyObj : null,
+
+    weight : 12,
+    maxSpeed : 200,
+    friction : 0.8,
+
+    objDesc : null,
+    jumpAction : null,
+
+    follow : null,
+
+    ctor : function(objDesc) {
+        this._super(res.littleGoron);
+
+        this.objDesc = objDesc;
+        var x = objDesc.x, y = objDesc.y, w = 32, h = 32;
+        this.x = x + w/2;
+        this.y = y + h/2;
+        this.width = w;
+        this.height = h;
+
+        this.phyObj = new DynamicSensor(x+w/2, y+h/2, 32, 32, this);
+        this.phyObj.shape.setCollisionType(LittleGoron.COL_TYPE);
+
+        this.jumpAction = cc.RepeatForever.create(cc.Sequence.create(
+            cc.Spawn.create(
+                cc.ScaleTo.create(0.1, 0.8, 1.2),
+                cc.MoveTo.create(0.1, x, y + h)
+            ),
+            cc.Spawn.create(
+                cc.ScaleTo.create(0.2, 1, 1),
+                cc.MoveTo.create(0.2, x, y + 2*h)
+            ),
+            cc.Spawn.create(
+                cc.MoveTo.create(0.5, x, y)
+            ),
+            cc.Spawn.create(
+                cc.ScaleTo.create(0.1, 1.2, 0.8),
+                cc.MoveTo.create(0.1, x, y-0.1*h)
+            ),
+            cc.Spawn.create(
+                cc.ScaleTo.create(0.2, 1, 1),
+                cc.MoveTo.create(0.2, x, y)
+            )
+        ));
+
+        this.runAction(this.jumpAction);
+
+        Physics.world.addCollisionHandler( LittleGoron.COL_TYPE, Hero.COL_TYPE, function (a) {
+            var hero = a.getB().obj.view.parent;
+            var goron = a.getA().obj.view;
+            goron.stopAction(goron.jumpAction);
+            goron.setPosition(hero.x, hero.y + hero.height/2 + goron.height/2);
+            goron.scale = 1;
+            goron.follow = hero;
+        }, null, null, null);
+    },
+
+    setPosition : function(x, y) {
+        this._super(x, y);
+        this.phyObj.body.setPos(cp.v(x, y));
+    },
+
+    update : function () {
+        if(this.follow) {
+            this.setPosition(this.follow.x, this.follow.y + this.follow.height/2 + this.height/2);
+        }
+    }
+});
+
+LittleGoron.COL_TYPE = 56;
