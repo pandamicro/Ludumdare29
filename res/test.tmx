@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="3" height="3" tilewidth="1134" tileheight="480">
+ <objectgroup name="Wall" width="3" height="3">
+  <object x="-1" y="960" width="594" height="567"/>
+  <object x="590" y="1051" width="272" height="477"/>
+  <object x="855" y="992" width="458" height="539"/>
+ </objectgroup>
+ <objectgroup name="Item" width="3" height="3"/>
+ <objectgroup name="Goron" width="3" height="3">
+  <properties>
+   <property name="className" value="GoronLayer"/>
+  </properties>
+  <object type="Goron" x="107" y="924" width="217" height="33"/>
+ </objectgroup>
+</map>
