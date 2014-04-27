@@ -1,4 +1,6 @@
 var res = {
+    title : "res/title.jpg",
+    help : "res/help.jpg",
     hero : "res/hero.png",
     background1 : "res/background1.jpg",
     background2 : "res/background2.jpg",
@@ -15,6 +17,8 @@ var res = {
 };
 
 var g_resources = [
+    res.title,
+    res.help,
     res.hero,
     "res/level1.tmx",
     "res/level2.tmx",

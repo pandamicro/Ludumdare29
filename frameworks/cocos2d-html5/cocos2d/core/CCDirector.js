@@ -228,17 +228,11 @@ cc.Director = cc.Class.extend(/** @lends cc.director# */{
         if (this._notificationNode)
             this._notificationNode.visit();
 
-        if (this._displayStats)
-            this._showStats();
-
         if (this._afterVisitScene) this._afterVisitScene();
 
         //TODO
         cc.eventManager.dispatchEvent(this._eventAfterDraw);
         this._totalFrames++;
-
-        if (this._displayStats)
-            this._calculateMPF();
     },
 
     _beforeVisitScene: null,

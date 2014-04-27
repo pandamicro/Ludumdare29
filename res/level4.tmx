@@ -17,7 +17,7 @@
   </properties>
   <object name="level4_trigger" type="Trigger" x="754" y="582" width="39" height="18"/>
   <object name="level4_bridge" type="MovableWall" x="357" y="595" width="463" height="28"/>
-  <object type="LabelTTF" x="1413" y="648" width="413" height="163">
+  <object type="LabelTTF" x="1361" y="609" width="368" height="163">
    <properties>
     <property name="string" value="What was that ? Somebody crying ? Eh-oh ?"/>
    </properties>

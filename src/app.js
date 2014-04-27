@@ -19,6 +19,8 @@ var MainScene = cc.Scene.extend({
     currentLevel : -1,
     restart : null,
     finished : false,
+    inTitle : true,
+    title : null,
 
     ctor : function () {
         this._super();
@@ -53,14 +55,61 @@ var MainScene = cc.Scene.extend({
             }
         }, this);
 
-        this.nextLevel();
+        this.title = new cc.Layer();
+        var sp = new cc.Sprite(res.title);
+        sp.scale = cc.winSize.width / 1200;
+        sp.anchorX = 0;
+        sp.anchorY = 0;
+        this.title.addChild(sp);
+
+        cc.eventManager.addListener({
+            event: cc.EventListener.TOUCH_ALL_AT_ONCE,
+
+            onTouchesEnded : function(touches, event) {
+                var touch = touches[0];
+                var scene = event.getCurrentTarget();
+
+                var rect = cc.rect(260, 75, 280, 70);
+                if (cc.rectContainsPoint(rect, touch.getLocation())) {
+                    scene.showHelp();
+                    return true;
+                }
+            }
+        }, this);
+    },
+
+    showHelp : function () {
+        var help = new cc.Layer();
+        var img = new cc.Sprite(res.help);
+        img.scale = cc.winSize.width / 800;
+        img.anchorX = 0;
+        img.anchorY = 0;
+        help.addChild(img);
+        this.removeChild(this.title);
+        this.addChild(help);
+        cc.eventManager.removeListeners(this);
+
+        cc.eventManager.addListener({
+            event: cc.EventListener.TOUCH_ALL_AT_ONCE,
+
+            onTouchesEnded : function(touches, event) {
+                var scene = event.getCurrentTarget();
+                cc.eventManager.removeListeners(scene);
+                scene.nextLevel();
+            }
+        }, this);
     },
 
     onEnter : function () {
         this._super();
 
-        this.addChild(this.level, 1);
-        this.addChild(this.restart, 10);
+        if (this.inTitle) {
+            this.addChild(this.title);
+        }
+        else {
+            this.addChild(this.level, 1);
+            this.addChild(this.restart, 10);
+        }
     },
 
     restartLevel : function () {
