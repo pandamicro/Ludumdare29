@@ -6,6 +6,8 @@ var MainScene = cc.Scene.extend({
     level : null,
 
     levels : [
+        "res/level6.tmx",
+        "res/level5.tmx",
         "res/level4.tmx",
         "res/level1.tmx",
         "res/level2.tmx",

@@ -217,3 +217,207 @@ var MovableWall = cc.DrawNode.extend({
 });
 
 MovableWall.COL_TYPE = 52;
+
+
+var Blood = cc.Sprite.extend({
+    texRect: cc.rect(0, 0, 95, 20),
+    bleeding: false,
+    currentH: 20,
+
+    ctor : function (x, y, w) {
+        this._super(res.blood, this.texRect);
+        this.x = x;
+        this.y = y+10;
+        this.scale = w / 95;
+        this.anchorY = 1;
+        this.opacity = 0;
+
+        this.runAction(cc.Spawn.create(
+            cc.FadeIn.create(0.1),
+            cc.CallFunc.create(function() {
+                this.bleeding = true;
+            }, this)
+        ));
+    },
+
+    update : function () {
+        if (this.bleeding) {
+            if (this.currentH < 118) {
+                this.currentH += 2;
+                this.texRect.height = this.currentH;
+                this.setTextureRect(this.texRect);
+            }
+        }
+    }
+});
+
+var Stab = cc.Layer.extend({
+    phyObj : null,
+    objDesc : null,
+    wall : null,
+    stab : null,
+    onTop : true,
+    stabH : 36,
+    texRect : cc.rect(0, 0, 128, 36),
+
+    ctor : function(objDesc, onTop) {
+        this._super();
+        if (onTop === false) this.onTop = false;
+        this.objDesc = objDesc;
+        this.x = objDesc.x;
+        this.y = objDesc.y;
+        this.width = objDesc.width;
+        this.height = objDesc.height;
+
+        this.stab = new cc.Sprite(res.stab, this.texRect);
+        this.stab.scaleX = objDesc.width / 128;
+        this.stab.x = objDesc.width/2;
+        if (this.onTop) {
+            this.stab.y = objDesc.height + this.stabH/2;
+        }
+        else {
+            this.stab.y = -this.stabH/2;
+            this.stab.rotation = 180;
+        }
+        this.addChild(this.stab);
+
+        this.wall = new PhysicWall(objDesc);
+        this.wall.x = 0;
+        this.wall.y = 0;
+        this.addChild(this.wall);
+
+        this.phyObj = new DynamicSensor(objDesc.x + objDesc.width/2, objDesc.y + this.stab.y - this.stabH/2, this.stab.width, 2, this);
+        this.phyObj.shape.setCollisionType(Stab.COL_TYPE);
+        var self = this;
+        Physics.world.addCollisionHandler( Stab.COL_TYPE, Hero.COL_TYPE, function (a) {
+            var hero = a.getB().obj.view;
+            hero.parent.dead();
+        }, null, null, null);
+        Physics.world.addCollisionHandler( Stab.COL_TYPE, Goron.COL_TYPE, function (a) {
+            var goron = a.getB().obj.view, p = a.getPoint(0);
+            if(goron.blood) return false;
+            goron.runAction(cc.Sequence.create(cc.DelayTime.create(1), cc.CallFunc.create(function() {
+                var blood;
+                if (Math.abs(goron.rotation) < cc.degreesToRadians(30)) {
+                    if (p.y <= goron.y)
+                        blood = new Blood(0, -goron.height/2, goron.width);
+                    else if (p.y > goron.y) {
+                        blood = new Blood(0, goron.height-20, goron.width);
+                    }
+                }
+                goron.addChild(blood);
+                goron.blood = blood;
+                goron.update = function () {
+                    goron.blood.update();
+                };
+                goron.reinit = function () {
+                    goron.removeChild(goron.blood);
+                    goron.blood = null;
+                };
+            })));
+        }, null, null, null);
+    },
+
+    setPosition : function(x, y) {
+        this._super(x, y);
+        this.phyObj.body.setPos(cp.v(x + this.objDesc.width/2, y + this.stab.y - this.stabH/2));
+    }
+});
+
+Stab.COL_TYPE = 53;
+
+var DropStab = cc.Layer.extend({
+    phyObj : null,
+    objDesc : null,
+    wall : null,
+    stab : null,
+    stabH : 36,
+    texRect : cc.rect(0, 0, 128, 36),
+
+    destY : 320+36,
+    downAction : null,
+    upAction : null,
+
+    ctor : function (objDesc) {
+        this._super(objDesc);
+
+        this.objDesc = objDesc;
+        this.x = objDesc.x;
+        this.y = objDesc.y;
+        this.width = objDesc.width;
+        this.height = objDesc.height;
+
+        this.stab = new cc.Sprite(res.stab, this.texRect);
+        this.stab.scaleX = objDesc.width / 128;
+        this.stab.x = objDesc.width/2;
+
+        this.stab.y = -this.stabH/2;
+        this.stab.rotation = 180;
+
+        this.addChild(this.stab);
+
+        this.wall = new PhysicWall(objDesc);
+        this.wall.x = 0;
+        this.wall.y = 0;
+        this.addChild(this.wall);
+
+        this.phyObj = new DynamicSensor(objDesc.x + objDesc.width/2, objDesc.y + this.stab.y - this.stabH/2, objDesc.width*3/4, 2, this);
+        this.phyObj.shape.setCollisionType(DropStab.COL_TYPE);
+
+        this.downAction = cc.Sequence.create(
+            cc.DelayTime.create(Math.ceil(10*Math.random())/10),
+            cc.EaseSineIn.create(cc.MoveTo.create(2, this.x, this.destY)),
+            cc.CallFunc.create(this.goUp, this)
+        );
+        this.upAction = cc.Sequence.create(
+            cc.EaseSineOut.create(cc.MoveTo.create(2, this.x, this.objDesc.y)),
+            cc.DelayTime.create(Math.ceil(5*Math.random())/10),
+            cc.CallFunc.create(this.goDown, this)
+        );
+
+        Physics.world.addCollisionHandler( DropStab.COL_TYPE, Hero.COL_TYPE, function (a) {
+            var hero = a.getB().obj.view;
+            hero.parent.dead();
+        }, null, null, null);
+        Physics.world.addCollisionHandler( DropStab.COL_TYPE, Wall.TOP_COL_TYPE, function (a) {
+            var stab = a.getA().obj.view;
+            stab.goUp();
+        }, null, null, null);
+        Physics.world.addCollisionHandler( DropStab.COL_TYPE, Goron.COL_TYPE, function (a) {
+            var goron = a.getB().obj.view, stab = a.getA().obj.view;
+            stab.goUp();
+            if(goron.blood) return false;
+            goron.runAction(cc.CallFunc.create(function() {
+                var blood;
+                blood = new Blood(0, goron.height/2-6, goron.width);
+                goron.addChild(blood);
+                goron.blood = blood;
+                goron.update = function () {
+                    goron.blood && goron.blood.update();
+                };
+                goron.reinit = function () {
+                    goron.blood && goron.removeChild(goron.blood);
+                    goron.blood = null;
+                };
+            }));
+        }, null, null, null);
+
+        this.goDown();
+    },
+
+    setPosition : function(x, y) {
+        this._super(x, y);
+        this.phyObj.body.setPos(cp.v(x + this.objDesc.width/2, y + this.stab.y - this.stabH/2));
+    },
+
+    goDown : function () {
+        this.runAction(this.downAction);
+    },
+
+    goUp : function () {
+        this.stopAction(this.downAction);
+        this.runAction(this.upAction);
+    }
+});
+
+DropStab.COL_TYPE = 54;

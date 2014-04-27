@@ -79,7 +79,7 @@ var Level = cc.ParallaxNode.extend({
             self.heroLayer.jumpEnd();
             return true;
         }, null, null, null);
-        Physics.world.addCollisionHandler(Hero.COL_TYPE, Wall.TOP_COL_TYPE, function(a) {
+        Physics.world.addCollisionHandler(Hero.COL_TYPE, PhysicWall.TOP_COL_TYPE, function(a) {
             self.heroLayer.jumpEnd();
             return true;
         }, null, null, null);
@@ -130,7 +130,6 @@ var Level = cc.ParallaxNode.extend({
         var hx = this.heroLayer.x, hy = this.heroLayer.y, lw = this.width, lh = this.height;
         this.heroPoint.setOffset(cc.p(hx, hy));
 
-        //cc.log(hx + ", " + hy);
         var dx = cc.winSize.width/4 - hx, dy = cc.winSize.height/2 - hy;
 
         // Adjust position

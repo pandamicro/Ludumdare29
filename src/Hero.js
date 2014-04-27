@@ -172,5 +172,9 @@ var HeroLayer = cc.Layer.extend({
             velx = this.speedSeuil;
         else return;
         this.phyObj.body.vx = velx;
+    },
+
+    dead : function () {
+        this.level.restart();
     }
 });

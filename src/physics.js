@@ -86,6 +86,21 @@ var StaticSensor = cc.Class.extend({
         Physics.world.removeStaticShape(this.shape);
     }
 });
+var DynamicSensor = cc.Class.extend({
+    body: null,
+    shape: null,
+    view: null,
+
+    ctor:function(x, y, width, height, view){
+        this.body = new cp.Body(1, cp.momentForBox(1, width, height));
+        this.body.setPos(cp.v(x, y));
+        this.shape = new cp.BoxShape(this.body, width, height);
+        this.shape.setSensor(true);
+        Physics.world.addShape(this.shape);
+        this.shape.obj = this;
+        this.view = view;
+    }
+});
 var PhysicsObject = cc.Class.extend({
     body:null,
     shape:null,

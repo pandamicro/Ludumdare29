@@ -15,7 +15,7 @@ var Goron = cc.DrawNode.extend({
     baseWeight : 0.05,
     weight : 10,
     maxSpeed : 200,
-    friction : 0.4,
+    friction : 0.35,
 
     prevPhyX : 0,
     prevPhyY : 0,
@@ -41,8 +41,7 @@ var Goron = cc.DrawNode.extend({
     reinit : function () {
         this.x = this.ox;
         this.y = this.oy;
-        this.phyObj.body.p.x = this.x;
-        this.phyObj.body.p.y = this.y;
+        this.phyObj.body.setPos(cp.v(this.x, this.y));
         this.phyObj.body.a = 0;
     },
 
@@ -66,7 +65,7 @@ var GoronLayer = cc.Layer.extend({
         // Reinit children
         for (var i = 0, children = this.children, l = children.length; i < l; i++) {
             var child = children[i];
-            child.reinit();
+            child.reinit && child.reinit();
         }
     },
 
@@ -74,7 +73,8 @@ var GoronLayer = cc.Layer.extend({
         var children = this.children, child;
         for (var i = 0, l = children.length; i < l; i++) {
             child = children[i];
-            child.syncTransform();
+            child.syncTransform && child.syncTransform();
+            child.update && child.update();
         }
     }
 });

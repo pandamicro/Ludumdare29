@@ -49,7 +49,7 @@ var TMXReader = cc.Class.extend({
                     if(typeof type == "function") {
                         node = new type(obj);
                     }
-                    else node = new Wall(obj);
+                    else node = new PhysicWall(obj);
                 }
 
                 if(obj.name) {
