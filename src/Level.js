@@ -68,14 +68,22 @@ var Level = cc.ParallaxNode.extend({
         var self = this;
         // Collision handler for hero and goron
         Physics.world.addCollisionHandler(Hero.RIGHT_COL_TYPE, Goron.COL_TYPE, null, function(a){
-            a.getB().body.vx = 100;
+            a.getB().body.vx = 90;
             return true;
         }, null, null);
         Physics.world.addCollisionHandler(Hero.LEFT_COL_TYPE, Goron.COL_TYPE, null, function(a){
-            a.getB().body.vx = -100;
+            a.getB().body.vx = -90;
             return true;
         }, null, null);
         Physics.world.addCollisionHandler(Hero.BOTTOM_COL_TYPE, Goron.COL_TYPE, function(a) {
+            self.heroLayer.jumpEnd();
+            return true;
+        }, null, null, null);
+        Physics.world.addCollisionHandler(Hero.COL_TYPE, Wall.TOP_COL_TYPE, function(a) {
+            self.heroLayer.jumpEnd();
+            return true;
+        }, null, null, null);
+        Physics.world.addCollisionHandler(Hero.BOTTOM_COL_TYPE, MovableWall.COL_TYPE, function(a) {
             self.heroLayer.jumpEnd();
             return true;
         }, null, null, null);
@@ -123,7 +131,7 @@ var Level = cc.ParallaxNode.extend({
         this.heroPoint.setOffset(cc.p(hx, hy));
 
         //cc.log(hx + ", " + hy);
-        var dx = cc.winSize.width/2 - hx, dy = cc.winSize.height/2 - hy;
+        var dx = cc.winSize.width/4 - hx, dy = cc.winSize.height/2 - hy;
 
         // Adjust position
         dx > this.left && (dx = this.left);

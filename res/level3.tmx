@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="60" height="30" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="background" value="background1"/>
+  <property name="heroX" value="25"/>
+  <property name="heroY" value="18"/>
+  <property name="left" value="0"/>
+  <property name="right" value="58"/>
+ </properties>
+ <objectgroup name="Wall" width="60" height="30">
+  <object x="-2" y="610" width="906" height="361"/>
+  <object x="1193" y="611" width="1159" height="568"/>
+  <object x="-22" y="327" width="21" height="283"/>
+  <object x="899" y="905" width="303" height="58"/>
+ </objectgroup>
+ <objectgroup name="objs" width="60" height="30">
+  <object type="Pool" x="901" y="651" width="295" height="326"/>
+ </objectgroup>
+ <objectgroup name="Goron" width="60" height="30">
+  <properties>
+   <property name="className" value="GoronLayer"/>
+  </properties>
+  <object x="199" y="538" width="124" height="70"/>
+  <object x="354" y="553" width="52" height="56"/>
+  <object x="440" y="572" width="67" height="36"/>
+ </objectgroup>
+</map>

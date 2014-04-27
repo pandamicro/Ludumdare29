@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="60" height="30" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="background" value="background1"/>
+  <property name="heroX" value="8"/>
+  <property name="heroY" value="15"/>
+  <property name="left" value="0"/>
+  <property name="right" value="55"/>
+ </properties>
+ <objectgroup name="Wall" width="60" height="30">
+  <object x="-1" y="578" width="821" height="414"/>
+  <object x="1219" y="578" width="1122" height="677"/>
+ </objectgroup>
+ <objectgroup name="objs" width="60" height="30">
+  <properties>
+   <property name="className" value="ObjectsLayer"/>
+  </properties>
+  <object name="level4_trigger" type="Trigger" x="754" y="582" width="39" height="18"/>
+  <object name="level4_bridge" type="MovableWall" x="357" y="595" width="463" height="28"/>
+ </objectgroup>
+ <objectgroup name="Goron" width="60" height="30">
+  <properties>
+   <property name="className" value="GoronLayer"/>
+  </properties>
+  <object name="level4_goron" x="639" y="526" width="153" height="47"/>
+ </objectgroup>
+</map>

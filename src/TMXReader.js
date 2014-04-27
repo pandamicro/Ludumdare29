@@ -2,7 +2,9 @@
  * Created by Huabin LING on 4/26/14.
  */
 
-TMXReader = cc.Class.extend({
+var cachedObjs = {};
+
+var TMXReader = cc.Class.extend({
     layerClass : {
         "GoronLayer" : GoronLayer
     },
@@ -19,6 +21,8 @@ TMXReader = cc.Class.extend({
             left = parseInt(map.getProperty("left")) * map.tileWidth,
             right = parseInt(map.getProperty("right")) * map.tileWidth;
 
+        cachedObjs = {};
+
         var groups = map.getObjectGroups(), group, gname, layerClass, nodeClass, objs, obj, i, j, l, n, layers = [], layer, node;
         for (i = 0, l = groups.length; i < l; i++) {
             group = groups[i];
@@ -26,7 +30,7 @@ TMXReader = cc.Class.extend({
             layerClass = group.propertyNamed("className");
             if(layerClass) {
                 nodeClass = this.nodeClass[layerClass];
-                layerClass = this.layerClass[layerClass];
+                layerClass = window[layerClass] || cc.Layer;
             }
             else layerClass = cc.Layer;
 
@@ -41,20 +45,22 @@ TMXReader = cc.Class.extend({
                     node = new nodeClass(obj);
                 }
                 else {
-                    switch(obj.type) {
-                        case "":
-                            node = new Wall(obj);
-                            break;
-
-                        case "Goron":
-                            node = new Goron(obj);
-                            break;
+                    var type = window[obj.type];
+                    if(typeof type == "function") {
+                        node = new type(obj);
                     }
+                    else node = new Wall(obj);
+                }
+
+                if(obj.name) {
+                    cachedObjs[obj.name] = node;
                 }
 
                 node && layer.addChild(node);
                 node = null;
             }
+            nodeClass = null;
+            layerClass = null;
         }
 
         var res = {

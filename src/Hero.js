@@ -148,14 +148,6 @@ var HeroLayer = cc.Layer.extend({
         else if (this.goLeft) {
             this.phyObj.move(180, 70);
         }
-
-        if (this.jumping && this.phyObj.body.vy == 0) {
-            this.yStopCount ++;
-            if (this.yStopCount > 2) {
-                this.yStopCount = 0;
-                this.jumpEnd();
-            }
-        }
     },
 
     jump : function() {

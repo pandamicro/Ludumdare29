@@ -40,8 +40,12 @@ var StaticObject = cc.Class.extend({
     bottom: null,
     left: null,
     right: null,
+    width: 0,
+    height: 0,
 
     ctor:function(x, y, width, height, view){
+        this.width = width;
+        this.height = height;
         this.top = new cp.SegmentShape(Physics.world.staticBody, cp.v(x, y+height), cp.v(x+width, y+height), 1);
         Physics.world.addShape(this.top);
         this.top.obj = this;
@@ -64,6 +68,22 @@ var StaticObject = cc.Class.extend({
         Physics.world.removeStaticShape(this.top);
         Physics.world.removeStaticShape(this.left);
         Physics.world.removeStaticShape(this.right);
+    }
+});
+var StaticSensor = cc.Class.extend({
+    view: null,
+    shape: null,
+
+    ctor:function(x, y, width, height, view){
+        this.shape = new cp.SegmentShape(Physics.world.staticBody, cp.v(x, y+height), cp.v(x+width, y+height), 5);
+        this.shape.setSensor(true);
+        Physics.world.addShape(this.shape);
+        this.shape.obj = this;
+        this.view = view;
+    },
+
+    removeSelf: function () {
+        Physics.world.removeStaticShape(this.shape);
     }
 });
 var PhysicsObject = cc.Class.extend({
