@@ -23,6 +23,7 @@
         "src/TMXReader.js",
         "src/LevelScript.js",
         "src/Level.js",
+        "src/ending.js",
 
         "src/app.js"
     ]

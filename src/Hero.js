@@ -64,12 +64,7 @@ var Hero = cc.Sprite.extend({
     },
 
     cleanup : function () {
-        if (this.phyObj) {
-            this.phyObj.removeSelf();
-            Physics.world.removeShape(this.bottomSensor);
-            Physics.world.removeShape(this.leftSensor);
-            Physics.world.removeShape(this.rightSensor);
-        }
+
     }
 });
 
@@ -135,6 +130,7 @@ var HeroLayer = cc.Layer.extend({
         );
 
         cc.eventManager.addListener(HeroInputManager, this);
+        cc.eventManager.addListener(HeroKeyboardManager, this);
 
         this.initPhysics();
     },

@@ -6,28 +6,22 @@ var MainScene = cc.Scene.extend({
     level : null,
 
     levels : [
-        "res/level1.tmx",
-        "res/level2.tmx",
-        "res/level3.tmx",
-        "res/level4.tmx",
-        "res/level5.tmx",
-        "res/level6.tmx",
+//        "res/level1.tmx",
+//        "res/level2.tmx",
+//        "res/level3.tmx",
+//        "res/level4.tmx",
+//        "res/level5.tmx",
+//        "res/level6.tmx",
         "res/level7.tmx",
         "res/level8.tmx"
     ],
 
-    currentLevel : 0,
+    currentLevel : -1,
     restart : null,
+    finished : false,
 
     ctor : function () {
         this._super();
-
-        this.level = new Level(this, this.levels[this.currentLevel]);
-
-        // Level scripts
-        if (LevelScript[this.currentLevel]) {
-            LevelScript[this.currentLevel](this.level);
-        }
 
         this.restart = new cc.Sprite(res.restart);
         this.restart.x = cc.winSize.width - 48;
@@ -58,32 +52,48 @@ var MainScene = cc.Scene.extend({
                 }
             }
         }, this);
+
+        this.nextLevel();
     },
 
     onEnter : function () {
         this._super();
 
-        this.addChild(this.level);
-        this.addChild(this.restart);
+        this.addChild(this.level, 1);
+        this.addChild(this.restart, 10);
     },
 
     restartLevel : function () {
-        this.level.reinit();
+        if (this.finished) {
+            this.currentLevel = -1;
+            this.finished = false;
+            this.nextLevel();
+        }
+        else
+            this.level.reinit();
     },
 
     nextLevel : function () {
-        if(this.currentLevel < this.levels.length-1)
-            this.currentLevel ++;
-        else this.currentLevel = 0;
-
         this.removeChild(this.level);
-        // Initialization
-        this.level = new Level(this, this.levels[this.currentLevel]);
 
-        // Level scripts
-        if (LevelScript[this.currentLevel]) {
-            LevelScript[this.currentLevel](this.level);
+        if(this.currentLevel < this.levels.length-1) {
+            this.currentLevel ++;
+
+            // Initialization
+            this.level = new Level(this, this.levels[this.currentLevel]);
+
+            // Level scripts
+            if (LevelScript[this.currentLevel]) {
+                LevelScript[this.currentLevel](this.level);
+            }
+            this.addChild(this.level, 1);
         }
-        this.addChild(this.level);
+        else {
+            this.level = new Ending();
+            this.addChild(this.level, 1);
+            this.finished = true;
+        }
+
+
     }
 });

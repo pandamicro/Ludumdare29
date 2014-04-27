@@ -56,3 +56,35 @@ var HeroInputManager = cc.EventListener.create({
         hero.stopMove();
     }
 });
+
+var HeroKeyboardManager = cc.EventListener.create({
+    event: cc.EventListener.KEYBOARD,
+
+    onKeyPressed : function (keyCode, event) {
+        var hero = event.getCurrentTarget();
+
+        if (keyCode == 39) {
+            hero.goRight = true;
+        }
+        else if (keyCode == 37) {
+            hero.goLeft = true;
+        }
+        else if (keyCode == 32 || keyCode == 38) {
+            hero.jump();
+        }
+    },
+    onKeyReleased : function (keyCode, event) {
+        var hero = event.getCurrentTarget();
+
+        if (hero.goRight && keyCode == 39) {
+            hero.goRight = false;
+            hero.goLeft = false;
+            hero.stopMove();
+        }
+        else if (hero.goLeft && keyCode == 37) {
+            hero.goRight = false;
+            hero.goLeft = false;
+            hero.stopMove();
+        }
+    }
+});
