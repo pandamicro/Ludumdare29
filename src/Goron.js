@@ -3,11 +3,13 @@
  */
 
 var Goron = cc.DrawNode.extend({
-    fillColor : cc.color(100, 100, 100, 255),
+    fillColor : cc.color(80, 94, 94, 255),
     lineWidth : 2,
-    strokeColor : cc.color(255, 0, 0, 128),
+    strokeColor : cc.color(60, 72, 72, 255),
     phyObj : null,
 
+    ox : 0,
+    oy : 0,
     w : 0,
     h : 0,
     baseWeight : 0.05,
@@ -24,8 +26,8 @@ var Goron = cc.DrawNode.extend({
         this._super();
 
         var x = objDesc.x, y = objDesc.y, w = objDesc.width, h = objDesc.height;
-        this.x = x + w/2;
-        this.y = y + h/2;
+        this.ox = this.x = x + w/2;
+        this.oy = this.y = y + h/2;
         this.w = this.width = w;
         this.h = this.height = h;
         this.weight = w * h * this.baseWeight;
@@ -34,6 +36,14 @@ var Goron = cc.DrawNode.extend({
         this.phyObj = new PhysicsObject(this.weight, cc.size(w, h), this.maxSpeed, this, cc.p(x + w/2, y + h/2));
         this.phyObj.setFriction(this.friction);
         this.phyObj.shape.setCollisionType(Goron.COL_TYPE);
+    },
+
+    reinit : function () {
+        this.x = this.ox;
+        this.y = this.oy;
+        this.phyObj.body.p.x = this.x;
+        this.phyObj.body.p.y = this.y;
+        this.phyObj.body.a = 0;
     },
 
     syncTransform : function() {
@@ -51,9 +61,13 @@ var Goron = cc.DrawNode.extend({
 Goron.COL_TYPE = 10;
 
 var GoronLayer = cc.Layer.extend({
-    onEnter : function () {
-        this._super();
-        this.scheduleUpdate();
+
+    reinit : function () {
+        // Reinit children
+        for (var i = 0, children = this.children, l = children.length; i < l; i++) {
+            var child = children[i];
+            child.reinit();
+        }
     },
 
     update : function () {

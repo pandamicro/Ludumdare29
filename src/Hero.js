@@ -84,6 +84,9 @@ var HeroLayer = cc.Layer.extend({
     jumping : false,
     yStopCount : 0,
 
+    jumpAction : null,
+    jumpEndAction : null,
+
     ctor : function(level) {
         this._super();
 
@@ -94,6 +97,28 @@ var HeroLayer = cc.Layer.extend({
         this.hero = new Hero(this.x, this.y, this.w, this.h);
         this.phyObj = this.hero.phyObj;
         this.addChild(this.hero);
+
+        this.jumpAction = cc.Sequence.create(
+            cc.Spawn.create(
+                cc.ScaleTo.create(0.1, 0.8, 1.2),
+                cc.MoveTo.create(0.1, 0, 0.1*this.h)
+            ),
+            cc.Spawn.create(
+                cc.ScaleTo.create(0.2, 1, 1),
+                cc.MoveTo.create(0.2, 0, 0)
+            )
+        );
+
+        this.jumpEndAction = cc.Sequence.create(
+            cc.Spawn.create(
+                cc.ScaleTo.create(0.1, 1.2, 0.8),
+                cc.MoveTo.create(0.1, 0, -0.1*this.h)
+            ),
+            cc.Spawn.create(
+                cc.ScaleTo.create(0.2, 1, 1),
+                cc.MoveTo.create(0.2, 0, 0)
+            )
+        );
 
         cc.eventManager.addListener(HeroInputManager, this);
 
@@ -128,7 +153,7 @@ var HeroLayer = cc.Layer.extend({
             this.yStopCount ++;
             if (this.yStopCount > 2) {
                 this.yStopCount = 0;
-                this.jumping = false;
+                this.jumpEnd();
             }
         }
     },
@@ -138,7 +163,13 @@ var HeroLayer = cc.Layer.extend({
             //this.phyObj.move(90, 10000);
             this.phyObj.body.vy = this.jumpVel;
             this.jumping = true;
+            this.hero.runAction(this.jumpAction);
         }
+    },
+
+    jumpEnd : function() {
+        this.jumping = false;
+        this.hero.runAction(this.jumpEndAction);
     },
 
     stopMove : function() {

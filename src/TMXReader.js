@@ -57,7 +57,7 @@ TMXReader = cc.Class.extend({
             }
         }
 
-        return {
+        var res = {
             "mapW" : mapW,
             "mapH" : mapH,
             "heroX" : isNaN(heroX) ? 400 : heroX,
@@ -66,5 +66,12 @@ TMXReader = cc.Class.extend({
             "right" : isNaN(right) ? mapW : right,
             "layers" : layers
         };
+        var props = map.getProperties();
+        for (var i in props) {
+            if (res[i] === undefined) {
+                res[i] = props[i];
+            }
+        }
+        return res;
     }
 });

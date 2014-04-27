@@ -17,7 +17,7 @@
         "src/Wall.js",
         "src/Hero.js",
         "src/Goron.js",
-        "src/Items.js",
+        "src/Components.js",
         "src/InputManager.js",
         "src/TMXReader.js",
         "src/Level.js",

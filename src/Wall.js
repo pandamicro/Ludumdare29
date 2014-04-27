@@ -3,7 +3,7 @@
  */
 
 var Wall = cc.DrawNode.extend({
-    fillColor : cc.color(128, 0, 128, 255),
+    fillColor : cc.color(51, 34, 30, 255),
     lineWidth : 0,
     phyObj : null,
     o : cc.p(),

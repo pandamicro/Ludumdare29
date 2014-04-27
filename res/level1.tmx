@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="60" height="30" tilewidth="32" tileheight="32">
  <properties>
+  <property name="background" value="background1"/>
   <property name="heroX" value="20"/>
   <property name="heroY" value="12"/>
   <property name="left" value="0"/>

@@ -23,24 +23,41 @@ var Level = cc.ParallaxNode.extend({
         Physics.init(scene);
 
         var reader = new TMXReader();
-        var res = reader.read(tmxFile);
+        var info = reader.read(tmxFile);
 
-        this.width = res.mapW;
-        this.height = res.mapH;
-        this.heroX = res.heroX;
-        this.heroY = res.heroY;
-        this.left = res.left === undefined ? 0 : res.left;
-        this.right = res.right === undefined ? this.width : res.right;
+        this.width = info.mapW;
+        this.height = info.mapH;
+        this.heroX = info.heroX;
+        this.heroY = info.heroY;
+        this.left = info.left === undefined ? 0 : info.left;
+        this.right = info.right === undefined ? this.width : info.right;
+
+        if(info.background) {
+            var background = new cc.Layer();
+            var img = res[info.background];
+            if(img) {
+                cc.textureCache.addImage(img);
+                var texture = cc.textureCache.textureForKey(img);
+                var bgImg = new cc.Sprite(texture, cc.rect(0, 0, texture.pixelsWidth, texture.pixelsHeight));
+                //bgImg.anchorX = 0;
+                //bgImg.anchorY = 0;
+                background.addChild(bgImg);
+                this.addChild(background, 0, cc.p(0.2, 0.2), cc.p(450, 350));
+            }
+        }
 
         this.heroLayer = new HeroLayer(this);
+        this.heroLayer.init(this.heroX, this.heroY);
+
+        this.tmxLayers = info.layers;
 
         var debugLayer = new cc.Layer();
         var debugNode = cc.PhysicsDebugNode.create( Physics.world );
         debugNode.setVisible( true );
         debugLayer.addChild(debugNode);
 
-        for (var i = 0, l = res.layers.length; i < l; i++) {
-            this.addChild(res.layers[i], i+2, cc.p(1,1), cc.p(0,0));
+        for (var i = 0, l = info.layers.length; i < l; i++) {
+            this.addChild(info.layers[i], i+2, cc.p(1,1), cc.p(0,0));
         }
         this.addChild(this.heroLayer, i+2, cc.p(1,1), this.heroLayer.getPosition());
         var pArr = this.getParallaxArray();
@@ -59,17 +76,19 @@ var Level = cc.ParallaxNode.extend({
             return true;
         }, null, null);
         Physics.world.addCollisionHandler(Hero.BOTTOM_COL_TYPE, Goron.COL_TYPE, function(a) {
-            self.heroLayer.jumping = false;
+            self.heroLayer.jumpEnd();
             return true;
         }, null, null, null);
-
-        this.init();
 
         this.scheduleUpdate();
     },
 
-    init : function () {
+    reinit : function () {
         this.heroLayer.init(this.heroX, this.heroY);
+        for (var i = 0, children = this.children, l = children.length; i < l; i++) {
+            var child = children[i];
+            child.reinit && child.reinit();
+        }
     },
 
     getHeroLayer : function () {
@@ -95,7 +114,11 @@ var Level = cc.ParallaxNode.extend({
         if (this.end) return;
 
         Physics.update();
-        this.heroLayer.update();
+        for (var i = 0, children = this.children, l = children.length; i < l; i++) {
+            var child = children[i];
+            child.update && child.update();
+        }
+
         var hx = this.heroLayer.x, hy = this.heroLayer.y, lw = this.width, lh = this.height;
         this.heroPoint.setOffset(cc.p(hx, hy));
 
@@ -123,7 +146,7 @@ var Level = cc.ParallaxNode.extend({
     },
 
     restart : function () {
-        this.init();
+        this.reinit();
     }
 });
 
