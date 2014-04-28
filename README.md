@@ -4,10 +4,10 @@ What I want to plant beneath the surface of my game is that don't let your inert
 
 ##Frameworks / Tools 
 
-Engine : Cocos2d-JS 3.0 
-IDE : WebStorm 
-Editor : Tiled 
-Hosted on Github
+- Engine : Cocos2d-JS 3.0 
+- IDE : WebStorm 
+- Editor : Tiled 
+- Hosted on Github
 
 ##Ludum Dare Vote Entry
 
