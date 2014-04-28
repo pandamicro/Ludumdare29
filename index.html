@@ -17,10 +17,56 @@
             -khtml-user-select: none;
             -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         }
+
+        canvas, div {
+            z-index: 10;
+        }
+        p {
+            margin: 5px 0;
+        }
+
+        footer {
+            z-index: 1;
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            left: 0px;
+            text-align: center;
+        }
+        footer h3 {
+            margin: 5px 0 5px 0;
+        }
+
+        footer ul {
+            list-style: none;
+        }
+        footer ul li {
+            display: inline;
+            padding: 10px;
+            background-color: rgb(40, 47, 47);
+            border-bottom: solid 1px rgb(20, 23, 23);
+        }
+        a {
+            color: rgb(216, 68, 66);
+            text-decoration: none;
+        }
     </style>
 </head>
 <body style="padding:0; margin: 0; background: transparent;">
 <canvas id="gameCanvas" width="800" height="450"></canvas>
+
+<footer>
+    <h3>
+        Controls
+    </h3>
+    <p>
+        Left & Right keys / Touch : Move to left or right<br/>
+        Up key / Space / Swipe up : Jump
+    </p>
+    <ul>
+        <li><a href="http://www.ludumdare.com/compo/ludum-dare-29/?action=preview&uid=35910">Ludum Dare Entry</a></li> | <li><a href="https://github.com/pandamicro/Ludumdare29">Github repo</a></li> | <li><a href="https://github.com/cocos2d/cocos2d-js">Powered by Cocos2d-JS</a></li>
+    </ul>
+</footer>
 <script src="frameworks/cocos2d-html5/CCBoot.js"></script>
 <script src="main.js"></script>
 </body>
