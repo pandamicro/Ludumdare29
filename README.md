@@ -4,7 +4,7 @@ What I want to plant beneath the surface of my game is that don't let your inert
 
 ##Frameworks / Tools 
 
-- Engine : Cocos2d-JS 3.0 
+- Engine : [Cocos2d-JS 3.0](https://github.com/cocos2d/cocos2d-js)
 - IDE : WebStorm 
 - Editor : Tiled 
 - Hosted on Github
