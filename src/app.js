@@ -38,7 +38,7 @@ var MainScene = cc.Scene.extend({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
 
             onTouchBegan : function(touch, event) {
-                var restart = event.getCurrentTarget().restart;
+                var restart = event.getCurrentTarget();
 
                 if (cc.rectContainsPoint(rect, touch.getLocation())) {
                     return true;
@@ -46,14 +46,14 @@ var MainScene = cc.Scene.extend({
             },
 
             onTouchEnded : function(touch, event) {
-                var scene = event.getCurrentTarget(), restart = scene.restart;
+                var scene = event.getCurrentTarget().parent, restart = scene.restart;
 
                 if (cc.rectContainsPoint(rect, touch.getLocation())) {
                     scene.restartLevel();
                     return true;
                 }
             }
-        }, this);
+        }, this.restart);
 
         this.title = new cc.Layer();
         var sp = new cc.Sprite(res.title);
@@ -95,6 +95,8 @@ var MainScene = cc.Scene.extend({
             onTouchesEnded : function(touches, event) {
                 var scene = event.getCurrentTarget();
                 cc.eventManager.removeListeners(scene);
+                scene.inTitle = false;
+                scene.addChild(scene.restart, 10);
                 scene.nextLevel();
             }
         }, this);
@@ -108,7 +110,6 @@ var MainScene = cc.Scene.extend({
         }
         else {
             this.addChild(this.level, 1);
-            this.addChild(this.restart, 10);
         }
     },
 
